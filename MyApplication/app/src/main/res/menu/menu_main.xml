@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.gsh.read.activity.MainActivity" >
+    <item android:id="@+id/action_ewm"
+        android:title="扫码"
+        android:orderInCategory="100"
+        android:icon="@mipmap/icon_ewm"
+        app:showAsAction="ifRoom" />
+</menu>

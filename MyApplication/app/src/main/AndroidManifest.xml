@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.BookFormListActivity"
             android:label="首页"
             android:launchMode="singleTask">
 

@@ -27,8 +27,8 @@ import org.xutils.view.annotation.ViewInject;
 import java.util.ArrayList;
 import java.util.List;
 
-@ContentView(R.layout.activity_main)
-public class MainActivity extends BaseActivity implements IMainMvpView {
+@ContentView(R.layout.activity_book_form_list)
+public class BookFormListActivity extends BaseActivity implements IMainMvpView {
 
     private MainPresenter presenter;
 
@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity implements IMainMvpView {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(MainActivity.this,ReadActivity.class));
+                startActivity(new Intent(BookFormListActivity.this,ReadActivity.class));
             }
         });
 
@@ -85,8 +85,8 @@ public class MainActivity extends BaseActivity implements IMainMvpView {
     private void onClick(View view){
         switch (view.getId()){
             case R.id.fab:
-                //new IntentIntegrator(MainActivity.this).initiateScan(); //初始化扫描
-                IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
+                //new IntentIntegrator(BookFormListActivity.this).initiateScan(); //初始化扫描
+                IntentIntegrator integrator = new IntentIntegrator(BookFormListActivity.this);
                 // 设置要扫描的条码类型，ONE_D_CODE_TYPES：一维码，QR_CODE_TYPES-二维码
                 integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
                 integrator.setCaptureActivity(ScanActivity.class);
@@ -141,7 +141,7 @@ public class MainActivity extends BaseActivity implements IMainMvpView {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_ewm:
-                IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
+                IntentIntegrator integrator = new IntentIntegrator(BookFormListActivity.this);
                 // 设置要扫描的条码类型，ONE_D_CODE_TYPES：一维码，QR_CODE_TYPES-二维码
                 integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
                 integrator.setCaptureActivity(ScanActivity.class);

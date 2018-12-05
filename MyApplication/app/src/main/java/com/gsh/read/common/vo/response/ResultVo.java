@@ -5,13 +5,26 @@ import java.util.Map;
 
 /**
  * 请求返回的VO
- * @param <T>
  */
-public class ResultVo<T> {
+public class ResultVo {
     private String code;
     private String msg;
-    private T data;
+    private Map<String,Object> result;
 
+
+    public static ResultVo getSuccess(){
+        ResultVo vo=new ResultVo();
+        vo.setCode("0");
+        vo.setMsg("操作成功");
+        return vo;
+    }
+
+    public static ResultVo getFail(){
+        ResultVo vo=new ResultVo();
+        vo.setCode("500");
+        vo.setMsg("操作失败");
+        return vo;
+    }
 
     public String getCode() {
         return code;
@@ -29,11 +42,11 @@ public class ResultVo<T> {
         this.msg = msg;
     }
 
-    public T getData() {
-        return data;
+    public Map<String, Object> getResult() {
+        return result;
     }
 
-    public void setData(T data) {
-        this.data = data;
+    public void setResult(Map<String, Object> result) {
+        this.result = result;
     }
 }

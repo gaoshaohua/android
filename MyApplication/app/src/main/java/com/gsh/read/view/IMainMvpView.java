@@ -7,8 +7,4 @@ import java.util.List;
 
 public interface IMainMvpView extends IBaseMvpView {
 
-    public PageUtils getPageUtils();
-
-    public void setData(List<JSON> mData);
-
 }

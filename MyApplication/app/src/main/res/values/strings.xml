@@ -1,4 +1,16 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">手机抄表</string>
     <string name="action_settings">Settings</string>
+
+    <string-array name="spinner_book_form">
+        <item>全部</item>
+　　　　<item>表册一</item>
+　　　　<item>表册二</item>
+        <item>表册二</item>
+    </string-array>
+    <string-array name="spinner_book_form_status">
+　　　　<item>全部</item>
+　　　　<item>未抄</item>
+　　　　<item>已抄</item>
+    </string-array>
 </resources>

@@ -19,39 +19,4 @@ public class MainPresenter extends BaseMvpPresenter {
         this.mvpView=(IMainMvpView)mvpView;
     }
 
-    public void queryList(){
-        LoginVo vo=new LoginVo("admin","123");
-        try {
-            HttpRequestImpl.getInstance().httpLogin(vo, new HttpCallback() {
-                @Override
-                public void onSuccess(Object o) {
-                    mvpView.showMessage("登录成功...");
-                    List<JSON> mData=new ArrayList<JSON>();
-                    for(int i=0;i<5;i++){
-                        JSONObject obj=new JSONObject();
-                        obj.put("name","张三");
-                        mData.add(obj);
-                    }
-                    mvpView.setData(mData);
-                }
-
-                @Override
-                public void onError(Throwable ex, boolean isOnCallback) {
-                    mvpView.showMessage("onError...");
-                }
-
-                @Override
-                public void onCancelled(Callback.CancelledException cex) {
-                    mvpView.showMessage("onCancelled...");
-                }
-
-                @Override
-                public void onFinished() {
-                    mvpView.showMessage("onFinished...");
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

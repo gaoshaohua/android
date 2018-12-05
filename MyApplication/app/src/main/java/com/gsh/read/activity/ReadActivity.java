@@ -121,6 +121,7 @@ public class ReadActivity extends BaseActivity implements IReadMvpView {
 
     @Override
     public void setData(List<JSON> mData) {
+        /**
         tvCode.setText("户号：");
         tvName.setText("户名：");
         tvPhone.setText("电话：");
@@ -129,6 +130,7 @@ public class ReadActivity extends BaseActivity implements IReadMvpView {
         tvReadUser.setText("抄表员：");
         tvRemark.setText("备注：");
         tvLastCode.setText("上月底数：");
+         **/
     }
 
     @Override

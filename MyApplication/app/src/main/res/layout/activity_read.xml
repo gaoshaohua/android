@@ -42,14 +42,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="账&#160;&#160;&#160;&#160;&#160;&#160;号："/>
+                    android:text="户号：10000001"/>
 
                 <TextView
                     android:id="@+id/tv_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="账&#160;&#160;&#160;&#160;&#160;&#160;号："/>
+                    android:text="户名：张三" />
             </LinearLayout>
             <TextView
                 android:id="@+id/tv_phone"
@@ -96,6 +96,7 @@
                 android:id="@+id/tv_last_code"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:layout_marginTop="5dp"
                 android:text="上月底数：1000"/>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -113,7 +114,7 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="3"
-                    android:text="1150"/>
+                    android:text=""/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -1,6 +1,7 @@
 package com.gsh.read.presenter;
 
 import com.gsh.read.common.vo.request.LoginVo;
+import com.gsh.read.common.vo.response.ResultVo;
 import com.gsh.read.model.http.HttpCallback;
 import com.gsh.read.model.http.impl.HttpRequestImpl;
 import com.gsh.read.view.IBaseMvpView;
@@ -17,13 +18,20 @@ public class LoginPresenter extends BaseMvpPresenter {
     }
 
     public void login(){
+        mvpView.showLoading();
         LoginVo vo=new LoginVo("admin","123");
         try {
-            HttpRequestImpl.getInstance().httpLogin(vo, new HttpCallback() {
+            HttpRequestImpl.getInstance().login(vo, new HttpCallback<ResultVo>() {
                 @Override
-                public void onSuccess(Object o) {
-                    mvpView.showMessage("登录成功...");
+                public void onSuccess(ResultVo vo) {
                     mvpView.startMainActivity();
+                    /**
+                    if(vo.getCode().equals("0")){
+                        mvpView.showMessage("登录成功...");
+                        mvpView.startMainActivity();
+                    }else{
+                        mvpView.showMessage("登录失败,错误码："+vo.getCode());
+                    }**/
                 }
 
                 @Override
@@ -33,12 +41,11 @@ public class LoginPresenter extends BaseMvpPresenter {
 
                 @Override
                 public void onCancelled(Callback.CancelledException cex) {
-                    mvpView.showMessage("onCancelled...");
                 }
 
                 @Override
                 public void onFinished() {
-                    mvpView.showMessage("onFinished...");
+                    mvpView.hideLoading();
                 }
             });
         } catch (Exception e) {

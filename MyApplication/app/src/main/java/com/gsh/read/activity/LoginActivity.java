@@ -45,7 +45,7 @@ public class LoginActivity extends BaseActivity implements ILoginMvpView {
 
     @Override
     public void startMainActivity() {
-        startActivity(new Intent(this,BookFormListActivity.class));
+        startActivity(new Intent(this,MainActivity.class));
         finish();
     }
 }

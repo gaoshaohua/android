@@ -2,6 +2,7 @@ package com.gsh.read.activity;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -15,6 +16,7 @@ import org.xutils.x;
 
 public class BaseActivity extends AppCompatActivity implements IBaseMvpView {
 
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +26,8 @@ public class BaseActivity extends AppCompatActivity implements IBaseMvpView {
     }
 
     private void initComponent(){
-
+        progressDialog=new ProgressDialog(this);
+        progressDialog.setMessage("加载中...");
     }
 
     @Override
@@ -34,12 +37,12 @@ public class BaseActivity extends AppCompatActivity implements IBaseMvpView {
 
     @Override
     public void showLoading() {
-
+        progressDialog.show();
     }
 
     @Override
     public void hideLoading() {
-
+        progressDialog.hide();
     }
 
     @Override

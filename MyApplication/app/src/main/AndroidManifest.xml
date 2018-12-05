@@ -15,30 +15,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
-        android:name=".MyApplication">
+        android:name=".MyApplication"
+        android:label="@string/app_name">
         <activity
-            android:name=".activity.LoginActivity"
-            android:label="登录">
+            android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.BookFormListActivity"
+            android:name=".activity.MainActivity"
             android:label="首页"
-            android:launchMode="singleTask">
-
-        </activity>
+            android:launchMode="singleTask"/>
+        <activity
+            android:name=".activity.BookFormListActivity"
+            android:label="表册"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".activity.ScanActivity"
-            android:label="二维码">
-
-        </activity>
+            android:label="扫码"/>
         <activity
             android:name=".activity.ReadActivity"
-            android:label="抄表">
-        </activity>
+            android:label="抄表"/>
     </application>
 
 </manifest>

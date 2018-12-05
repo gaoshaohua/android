@@ -9,13 +9,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Spinner;
+
 import com.alibaba.fastjson.JSON;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.gsh.read.R;
 import com.gsh.read.activity.adapter.MainListAdapter;
 import com.gsh.read.common.utils.PageUtils;
+import com.gsh.read.presenter.BookFormListPresenter;
 import com.gsh.read.presenter.MainPresenter;
+import com.gsh.read.view.IBookFormListMvpView;
 import com.gsh.read.view.IMainMvpView;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -28,12 +32,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ContentView(R.layout.activity_book_form_list)
-public class BookFormListActivity extends BaseActivity implements IMainMvpView {
+public class BookFormListActivity extends BaseActivity implements IBookFormListMvpView {
 
-    private MainPresenter presenter;
+    private BookFormListPresenter presenter;
 
     @ViewInject(R.id.toolbar)
     private Toolbar toolbar;
+
+    @ViewInject(R.id.spinner_book_form)
+    private Spinner spinnerBookForm;
+
+    @ViewInject(R.id.spinner_book_form_status)
+    private Spinner spinnerBookFormStatus;
 
     @ViewInject(R.id.list_view)
     private ListView listView;
@@ -48,11 +58,13 @@ public class BookFormListActivity extends BaseActivity implements IMainMvpView {
 
     private PageUtils pageUtils=new PageUtils();
 
+    private boolean[] enableSpinner=new boolean[]{false,false};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setSupportActionBar(toolbar);
-        presenter=new MainPresenter(this);
+        presenter=new BookFormListPresenter(this);
         adapter=new MainListAdapter(this,new ArrayList<JSON>());
         listView.setAdapter(adapter);
         refreshLayout.autoRefresh();
@@ -79,6 +91,37 @@ public class BookFormListActivity extends BaseActivity implements IMainMvpView {
             }
         });
 
+        spinnerBookForm.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(enableSpinner[0]) {
+                    refreshLayout.autoRefresh();
+                }else{
+                    enableSpinner[0]=true;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        spinnerBookFormStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(enableSpinner[1]) {
+                    refreshLayout.autoRefresh();
+                }else{
+                    enableSpinner[1]=true;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Event(R.id.fab)
@@ -108,12 +151,20 @@ public class BookFormListActivity extends BaseActivity implements IMainMvpView {
     public void setData(List<JSON> mData) {
         if(pageUtils.getPageIndex()==0){
             adapter.setmData(mData);
-            refreshLayout.finishRefresh();
         }else{
             adapter.addmData(mData);
-            refreshLayout.finishLoadMore();
         }
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void finishRefresh() {
+        refreshLayout.finishRefresh();
+    }
+
+    @Override
+    public void finishLoadMore() {
+        refreshLayout.finishLoadMore();
     }
 
     //回调获取扫描得到的条码值

@@ -9,12 +9,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import com.alibaba.fastjson.JSON;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.gsh.read.R;
 import com.gsh.read.activity.adapter.MainListAdapter;
 import com.gsh.read.common.utils.PageUtils;
+import com.gsh.read.common.vo.response.BookFormVo;
 import com.gsh.read.presenter.MainPresenter;
 import com.gsh.read.view.IMainMvpView;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -24,6 +24,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,8 +54,9 @@ public class MainActivity extends BaseActivity implements IMainMvpView {
         super.onCreate(savedInstanceState);
         setSupportActionBar(toolbar);
         presenter=new MainPresenter(this);
-        adapter=new MainListAdapter(this,new ArrayList<JSON>());
+        adapter=new MainListAdapter(this,new ArrayList<BookFormVo>());
         listView.setAdapter(adapter);
+        refreshLayout.setEnableLoadMore(false);
         refreshLayout.autoRefresh();
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -75,7 +77,9 @@ public class MainActivity extends BaseActivity implements IMainMvpView {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(MainActivity.this,ReadActivity.class));
+                Intent intent = new Intent(MainActivity.this,ReadActivity.class);
+                intent.putExtra("consNo",adapter.getItem(position).getConsNo());
+                startActivity(intent);
             }
         });
 
@@ -105,7 +109,7 @@ public class MainActivity extends BaseActivity implements IMainMvpView {
     }
 
     @Override
-    public void setData(List<JSON> mData) {
+    public void setData(List<BookFormVo> mData) {
         if(pageUtils.getPageIndex()==0){
             adapter.setmData(mData);
             refreshLayout.finishRefresh();

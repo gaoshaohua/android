@@ -1,14 +1,9 @@
 package com.gsh.read.activity;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.gsh.read.MyApplication;
-import com.gsh.read.R;
 import com.gsh.read.view.IBaseMvpView;
 
 import org.xutils.x;

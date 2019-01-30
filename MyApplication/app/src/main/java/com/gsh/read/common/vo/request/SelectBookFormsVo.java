@@ -1,19 +1,15 @@
 package com.gsh.read.common.vo.request;
 
 /**
- * 登录VO
+ * 查询表册列表VO
  */
-public class LoginVo extends BaseVo{
+public class SelectBookFormsVo extends BaseVo{
     /**
      * 抄表员编号
      */
     private String userNo;
-    /**
-     * 密码
-     */
-    private String pwd;
 
-    public LoginVo(String servCode) {
+    public SelectBookFormsVo(String servCode) {
         super(servCode);
     }
 
@@ -25,11 +21,4 @@ public class LoginVo extends BaseVo{
         this.userNo = userNo;
     }
 
-    public String getPwd() {
-        return pwd;
-    }
-
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
-    }
 }

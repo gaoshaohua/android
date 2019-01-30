@@ -8,32 +8,41 @@ import java.util.Map;
  * @param <T>
  */
 public class ResultVo<T> {
-    private String code;
-    private String msg;
-    private T data;
+    private String servCode;
+    private String rtnCode;
+    private String consNo;
+    private T rtnData;
 
 
-    public String getCode() {
-        return code;
+    public String getServCode() {
+        return servCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setServCode(String servCode) {
+        this.servCode = servCode;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getRtnCode() {
+        return rtnCode;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setRtnCode(String rtnCode) {
+        this.rtnCode = rtnCode;
     }
 
-    public T getData() {
-        return data;
+    public String getConsNo() {
+        return consNo;
     }
 
-    public void setData(T data) {
-        this.data = data;
+    public void setConsNo(String consNo) {
+        this.consNo = consNo;
+    }
+
+    public T getRtnData() {
+        return rtnData;
+    }
+
+    public void setRtnData(T rtnData) {
+        this.rtnData = rtnData;
     }
 }

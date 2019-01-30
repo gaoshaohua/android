@@ -1,27 +1,27 @@
 package com.gsh.read.common.vo.response;
 
 /**
- * 用户返回VO
+ * 用户登录返回VO
  */
 public class UserVo {
-    private String account;
-    private String name;
+    private String userNo;
+    private String userName;
     private String token;
 
-    public String getAccount() {
-        return account;
+    public String getUserNo() {
+        return userNo;
     }
 
-    public void setAccount(String account) {
-        this.account = account;
+    public void setUserNo(String userNo) {
+        this.userNo = userNo;
     }
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getToken() {

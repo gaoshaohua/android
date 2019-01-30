@@ -1,5 +1,6 @@
 package com.gsh.read.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -19,7 +20,10 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.gsh.read.R;
+import com.gsh.read.common.vo.response.CustomerVo;
+import com.gsh.read.common.vo.response.ResultVo;
 import com.gsh.read.presenter.ReadPresenter;
 import com.gsh.read.view.IReadMvpView;
 import org.xutils.view.annotation.ContentView;
@@ -54,18 +58,20 @@ public class ReadActivity extends BaseActivity implements IReadMvpView {
     private TextView tvRemark;
     @ViewInject(R.id.tv_last_code)
     private TextView tvLastCode;
-    @ViewInject(R.id.tv_read_code)
-    private EditText tvReadCode;
+    @ViewInject(R.id.et_read_code)
+    private EditText et_read_code;
 
     @ViewInject(R.id.lineChart)
     private LineChart mLineChart;
+
+    List<Entry> entries = new ArrayList<Entry>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setSupportActionBar(toolbar);
         presenter=new ReadPresenter(this);
-        presenter.queryUserByCode();
+        presenter.queryUserByCode(getIntent().getStringExtra("consNo"));
         if(toolbar==null){
             Log.d(ReadActivity.class.getSimpleName(),"toolbar is null");
             return;
@@ -78,20 +84,10 @@ public class ReadActivity extends BaseActivity implements IReadMvpView {
         });
         //显示边界
         mLineChart.setDrawBorders(false);
-        //设置数据
-        final List<Entry> entries = new ArrayList<Entry>();
-        for (int i = 0; i < 10; i++) {
-            entries.add(new Entry(i, (float) (Math.random()) * 80));
-        }
-        //一个LineDataSet就是一条线
-        LineDataSet lineDataSet = new LineDataSet(entries, "用水量");
-        LineData data = new LineData(lineDataSet);
-        mLineChart.setData(data);
-
 
         XAxis xAxis = mLineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setLabelCount(10, true);
+        xAxis.setLabelCount(3, true);
 
         xAxis.setValueFormatter(new IAxisValueFormatter() {
 
@@ -102,7 +98,7 @@ public class ReadActivity extends BaseActivity implements IReadMvpView {
 
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return ((int)entries.get((int) value).getX())+"月";
+                return (int) value+"月";
             }
         });
 
@@ -114,14 +110,14 @@ public class ReadActivity extends BaseActivity implements IReadMvpView {
     private void onClick(View view){
         switch (view.getId()){
             case R.id.btn_read:
-
+                presenter.uploadMetaRead("110207",getIntent().getStringExtra("consNo"),et_read_code.getText().toString());
                 break;
         }
     }
 
     @Override
-    public void setData(List<JSON> mData) {
-        tvCode.setText("户号：");
+    public void setData(ResultVo mData) {
+        tvCode.setText("户号："+mData.getConsNo());
         tvName.setText("户名：");
         tvPhone.setText("电话：");
         tvAddress.setText("地址：");
@@ -129,6 +125,37 @@ public class ReadActivity extends BaseActivity implements IReadMvpView {
         tvReadUser.setText("抄表员：");
         tvRemark.setText("备注：");
         tvLastCode.setText("上月底数：");
+    }
+
+    @Override
+    public void setHistoryData(List<CustomerVo> mData) {
+        mData=mData.subList(mData.size()-4,mData.size());
+        if(mData.size()>0){
+            mLineChart.getXAxis().setLabelCount(mData.size(), true);
+        }
+        //设置数据
+        for (int i = 0; i <mData.size(); i++) {
+            entries.add(new Entry(Float.parseFloat(mData.get(i).getDateYM()), Float.parseFloat(mData.get(i).getNum())));
+        }
+        //一个LineDataSet就是一条线
+        LineDataSet lineDataSet = new LineDataSet(entries, "用水量");
+        LineData data = new LineData(lineDataSet);
+        mLineChart.setData(data);
+    }
+
+    //回调获取扫描得到的条码值
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null) {
+            if(result.getContents() == null) {
+                showMessage("扫码取消！");
+            } else {
+                showMessage("扫描成功，条码值: " + result.getContents());
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override
@@ -154,4 +181,6 @@ public class ReadActivity extends BaseActivity implements IReadMvpView {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

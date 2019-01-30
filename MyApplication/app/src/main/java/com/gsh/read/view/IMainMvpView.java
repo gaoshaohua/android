@@ -1,14 +1,14 @@
 package com.gsh.read.view;
 
-import com.alibaba.fastjson.JSON;
 import com.gsh.read.common.utils.PageUtils;
+import com.gsh.read.common.vo.response.BookFormVo;
 
 import java.util.List;
 
 public interface IMainMvpView extends IBaseMvpView {
 
-    public PageUtils getPageUtils();
+    PageUtils getPageUtils();
 
-    public void setData(List<JSON> mData);
+    void setData(List<BookFormVo> mData);
 
 }

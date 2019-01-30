@@ -19,34 +19,46 @@
                 android:layout_marginTop="5dp"
                 android:weightSum="2">
                 <TextView
+                    android:id="@+id/tv_cname"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="户名：张三"/>
                 <TextView
+                    android:id="@+id/tv_ccode"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="户号：10000001"/>
             </LinearLayout>
+            <TextView
+                android:id="@+id/tv_bcname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="表册："/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="5dp"
-                android:weightSum="2">
+                android:weightSum="2"
+                android:visibility="gone">
                 <TextView
+                    android:id="@+id/tv_startCode"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="起码：1000"/>
                 <TextView
+                    android:id="@+id/tv_endCode"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="止码：1150"/>
             </LinearLayout>
             <TextView
+                android:id="@+id/tv_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -54,6 +66,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/tv_status"
             android:layout_width="70dp"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"

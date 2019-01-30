@@ -1,8 +1,15 @@
 package com.gsh.read.presenter;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.gsh.read.common.consts.HttpConst;
 import com.gsh.read.common.vo.request.LoginVo;
+import com.gsh.read.common.vo.request.SelectUserInfoVo;
+import com.gsh.read.common.vo.request.UploadDataVo;
+import com.gsh.read.common.vo.response.BookFormVo;
+import com.gsh.read.common.vo.response.CustomerVo;
+import com.gsh.read.common.vo.response.ResultVo;
 import com.gsh.read.model.http.HttpCallback;
 import com.gsh.read.model.http.impl.HttpRequestImpl;
 import com.gsh.read.view.IBaseMvpView;
@@ -22,20 +29,59 @@ public class ReadPresenter extends BaseMvpPresenter {
         this.mvpView=(IReadMvpView)mvpView;
     }
 
-    public void queryUserByCode(){
-        LoginVo vo=new LoginVo("admin","123");
+    public void queryUserByCode(String consNo){
+        SelectUserInfoVo vo=new SelectUserInfoVo("003");
+        vo.setConsNo(consNo);
         try {
-            HttpRequestImpl.getInstance().httpLogin(vo, new HttpCallback() {
+            HttpRequestImpl.getInstance().selectUserInfo(vo, new HttpCallback<String>() {
                 @Override
-                public void onSuccess(Object o) {
-                    mvpView.showMessage("登录成功...");
-                    List<JSON> mData=new ArrayList<JSON>();
-                    for(int i=0;i<20;i++){
-                        JSONObject obj=new JSONObject();
-                        obj.put("name","张三");
-                        mData.add(obj);
+                public void onSuccess(String result) {
+                    ResultVo<JSONArray> resultVo = JSON.parseObject(result,ResultVo.class);
+                    if(resultVo.getRtnCode().equals(HttpConst.SUCCESS)){
+                        mvpView.showMessage("请求成功...");
+                        List<CustomerVo> mData = JSON.parseArray(resultVo.getRtnData().toJSONString(),CustomerVo.class);
+                        mvpView.setData(resultVo);
+                        mvpView.setHistoryData(mData);
+                    }else{
+                        mvpView.showMessage("请求失败...");
                     }
-                    mvpView.setData(mData);
+                }
+
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+                    mvpView.showMessage("onError...");
+                }
+
+                @Override
+                public void onCancelled(Callback.CancelledException cex) {
+                    mvpView.showMessage("onCancelled...");
+                }
+
+                @Override
+                public void onFinished() {
+                    mvpView.showMessage("onFinished...");
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void uploadMetaRead(String userNo,String consNo,String endCode){
+        UploadDataVo vo=new UploadDataVo("005");
+        vo.setUserNo(userNo);
+        vo.setConsNo(consNo);
+        vo.setEndCode(endCode);
+        try {
+            HttpRequestImpl.getInstance().uploadData(vo, new HttpCallback<String>() {
+                @Override
+                public void onSuccess(String result) {
+                    ResultVo<com.gsh.read.common.vo.response.UploadDataVo> resultVo = JSON.parseObject(result,ResultVo.class);
+                    if(resultVo.getRtnCode().equals(HttpConst.SUCCESS)){
+                        mvpView.showMessage(resultVo.getRtnData().getMSG());
+                    }else{
+                        mvpView.showMessage("请求失败...");
+                    }
                 }
 
                 @Override

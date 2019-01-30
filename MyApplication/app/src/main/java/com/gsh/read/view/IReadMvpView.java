@@ -1,11 +1,15 @@
 package com.gsh.read.view;
 
 import com.alibaba.fastjson.JSON;
+import com.gsh.read.common.vo.response.CustomerVo;
+import com.gsh.read.common.vo.response.ResultVo;
 
 import java.util.List;
 
 public interface IReadMvpView extends IBaseMvpView {
 
-    public void setData(List<JSON> mData);
+     void setData(ResultVo mData);
+
+    void setHistoryData(List<CustomerVo> mData);
 
 }

@@ -1,6 +1,10 @@
 package com.gsh.read.presenter;
 
+import com.alibaba.fastjson.JSON;
+import com.gsh.read.common.consts.HttpConst;
 import com.gsh.read.common.vo.request.LoginVo;
+import com.gsh.read.common.vo.response.ResultVo;
+import com.gsh.read.common.vo.response.UserVo;
 import com.gsh.read.model.http.HttpCallback;
 import com.gsh.read.model.http.impl.HttpRequestImpl;
 import com.gsh.read.view.IBaseMvpView;
@@ -17,13 +21,19 @@ public class LoginPresenter extends BaseMvpPresenter {
     }
 
     public void login(){
-        LoginVo vo=new LoginVo("admin","123");
+        LoginVo vo=new LoginVo("002");
+        vo.setUserNo("110207");
         try {
-            HttpRequestImpl.getInstance().httpLogin(vo, new HttpCallback() {
+            HttpRequestImpl.getInstance().login(vo, new HttpCallback<String>() {
                 @Override
-                public void onSuccess(Object o) {
-                    mvpView.showMessage("登录成功...");
-                    mvpView.startMainActivity();
+                public void onSuccess(String result) {
+                    ResultVo<UserVo> resultVo = JSON.parseObject(result,ResultVo.class);
+                    if(resultVo.getRtnCode().equals(HttpConst.SUCCESS)){
+                        mvpView.showMessage("登录成功...");
+                        mvpView.startMainActivity();
+                    }else{
+                        mvpView.showMessage("登录失败...");
+                    }
                 }
 
                 @Override

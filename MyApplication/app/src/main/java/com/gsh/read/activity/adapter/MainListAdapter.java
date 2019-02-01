@@ -23,7 +23,7 @@ public class MainListAdapter extends MyBaseAdapter<BookFormVo> {
         ((TextView) holder.getView(R.id.tv_ccode)).setText("户号："+vo.getConsNo());
         ((TextView) holder.getView(R.id.tv_bcname)).setText("表册："+vo.getBcName());
         ((TextView) holder.getView(R.id.tv_address)).setText("抄表线路："+vo.getSbAddr());
-        if(vo.getConsNo().equals("001646")){
+        if(null==vo.getStatus()){
             ((TextView) holder.getView(R.id.tv_status)).setVisibility(View.GONE);
         }else{
             ((TextView) holder.getView(R.id.tv_status)).setText("已抄");

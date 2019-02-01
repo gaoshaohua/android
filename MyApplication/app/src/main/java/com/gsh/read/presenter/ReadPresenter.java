@@ -10,6 +10,7 @@ import com.gsh.read.common.vo.request.UploadDataVo;
 import com.gsh.read.common.vo.response.BookFormVo;
 import com.gsh.read.common.vo.response.CustomerVo;
 import com.gsh.read.common.vo.response.ResultVo;
+import com.gsh.read.model.database.MyDbManager;
 import com.gsh.read.model.http.HttpCallback;
 import com.gsh.read.model.http.impl.HttpRequestImpl;
 import com.gsh.read.view.IBaseMvpView;
@@ -17,6 +18,7 @@ import com.gsh.read.view.IMainMvpView;
 import com.gsh.read.view.IReadMvpView;
 
 import org.xutils.common.Callback;
+import org.xutils.ex.DbException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +69,7 @@ public class ReadPresenter extends BaseMvpPresenter {
         }
     }
 
-    public void uploadMetaRead(String userNo,String consNo,String endCode){
+    public void uploadMetaRead(String userNo, final String consNo, String endCode){
         UploadDataVo vo=new UploadDataVo("005");
         vo.setUserNo(userNo);
         vo.setConsNo(consNo);
@@ -78,7 +80,18 @@ public class ReadPresenter extends BaseMvpPresenter {
                 public void onSuccess(String result) {
                     ResultVo<com.gsh.read.common.vo.response.UploadDataVo> resultVo = JSON.parseObject(result,ResultVo.class);
                     if(resultVo.getRtnCode().equals(HttpConst.SUCCESS)){
-                        mvpView.showMessage(resultVo.getRtnData().getMSG());
+                        com.gsh.read.common.vo.response.UploadDataVo dataVo=JSON.parseObject(JSON.toJSONString(resultVo.getRtnData()),com.gsh.read.common.vo.response.UploadDataVo.class);
+                        mvpView.showMessage(dataVo.getMSG());
+                        if(dataVo.getCODE().equals("0")||dataVo.getCODE().equals("3")){
+                            BookFormVo bfVo=new BookFormVo();
+                            bfVo.setConsNo(consNo);
+                            bfVo.setStatus("1");
+                            try {
+                                MyDbManager.getInstance().update(bfVo,"status");
+                            } catch (DbException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }else{
                         mvpView.showMessage("请求失败...");
                     }
@@ -91,12 +104,10 @@ public class ReadPresenter extends BaseMvpPresenter {
 
                 @Override
                 public void onCancelled(Callback.CancelledException cex) {
-                    mvpView.showMessage("onCancelled...");
                 }
 
                 @Override
                 public void onFinished() {
-                    mvpView.showMessage("onFinished...");
                 }
             });
         } catch (Exception e) {

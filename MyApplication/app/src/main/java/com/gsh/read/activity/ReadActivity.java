@@ -66,12 +66,13 @@ public class ReadActivity extends BaseActivity implements IReadMvpView {
 
     List<Entry> entries = new ArrayList<Entry>();
 
+    private String consNo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setSupportActionBar(toolbar);
         presenter=new ReadPresenter(this);
-        presenter.queryUserByCode(getIntent().getStringExtra("consNo"));
+        consNo=getIntent().getStringExtra("consNo");
         if(toolbar==null){
             Log.d(ReadActivity.class.getSimpleName(),"toolbar is null");
             return;
@@ -106,6 +107,12 @@ public class ReadActivity extends BaseActivity implements IReadMvpView {
         rightYAxis.setEnabled(false);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        presenter.queryUserByCode(consNo);
+    }
+
     @Event(R.id.btn_read)
     private void onClick(View view){
         switch (view.getId()){
@@ -129,11 +136,12 @@ public class ReadActivity extends BaseActivity implements IReadMvpView {
 
     @Override
     public void setHistoryData(List<CustomerVo> mData) {
-        mData=mData.subList(mData.size()-4,mData.size());
+        //mData=mData.subList(mData.size()-4,mData.size());
         if(mData.size()>0){
             mLineChart.getXAxis().setLabelCount(mData.size(), true);
         }
         //设置数据
+        entries.clear();
         for (int i = 0; i <mData.size(); i++) {
             entries.add(new Entry(Float.parseFloat(mData.get(i).getDateYM()), Float.parseFloat(mData.get(i).getNum())));
         }
@@ -152,6 +160,9 @@ public class ReadActivity extends BaseActivity implements IReadMvpView {
                 showMessage("扫码取消！");
             } else {
                 showMessage("扫描成功，条码值: " + result.getContents());
+                Intent intent = new Intent(ReadActivity.this,ReadActivity.class);
+                consNo=result.getContents();
+                startActivity(intent);
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);

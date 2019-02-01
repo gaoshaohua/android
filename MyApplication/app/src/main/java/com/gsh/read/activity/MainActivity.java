@@ -2,6 +2,8 @@ package com.gsh.read.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -15,12 +17,15 @@ import com.gsh.read.R;
 import com.gsh.read.activity.adapter.MainListAdapter;
 import com.gsh.read.common.utils.PageUtils;
 import com.gsh.read.common.vo.response.BookFormVo;
+import com.gsh.read.model.database.MyDbManager;
 import com.gsh.read.presenter.MainPresenter;
 import com.gsh.read.view.IMainMvpView;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.constant.RefreshState;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
+import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -49,6 +54,25 @@ public class MainActivity extends BaseActivity implements IMainMvpView {
 
     private PageUtils pageUtils=new PageUtils();
 
+    public int currentPosition=0;
+
+    public String consNo=null;
+
+    Handler myHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    presenter.queryListFromNet();
+                    break;
+                case 1:
+                    String result=msg.getData().getString("mData","[]");
+                    presenter.querySuccess(result);
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,14 +86,14 @@ public class MainActivity extends BaseActivity implements IMainMvpView {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 pageUtils.setPageIndex(0);
-                presenter.queryList();
+                presenter.queryListFromDb(myHandler);
             }
         });
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(RefreshLayout refreshlayout) {
                 pageUtils.setPageIndex(pageUtils.getPageIndex()+1);
-                presenter.queryList();
+                presenter.queryListFromNet();
             }
         });
 
@@ -77,12 +101,29 @@ public class MainActivity extends BaseActivity implements IMainMvpView {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                currentPosition=position;
+                consNo=adapter.getItem(position).getConsNo();
                 Intent intent = new Intent(MainActivity.this,ReadActivity.class);
-                intent.putExtra("consNo",adapter.getItem(position).getConsNo());
+                intent.putExtra("consNo",consNo);
                 startActivity(intent);
             }
         });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(consNo!=null){
+            try {
+                BookFormVo vo = MyDbManager.getInstance().findById(BookFormVo.class,consNo);
+                adapter.getmData().remove(currentPosition);
+                adapter.getmData().add(currentPosition,vo);
+                adapter.notifyDataSetChanged();
+            } catch (DbException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Event(R.id.fab)
@@ -129,6 +170,9 @@ public class MainActivity extends BaseActivity implements IMainMvpView {
                 showMessage("扫码取消！");
             } else {
                 showMessage("扫描成功，条码值: " + result.getContents());
+                Intent intent = new Intent(MainActivity.this,ReadActivity.class);
+                intent.putExtra("consNo",result.getContents());
+                startActivity(intent);
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
